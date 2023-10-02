@@ -22,7 +22,7 @@ from keras_nlp.layers.modeling.transformer_layer_utils import (  # isort:skip
 
 
 @keras_nlp_export("keras_nlp.layers.TransformerEncoder")
-class TransformerEncoder(keras.layers.Layer):
+class SprTransformerEncoder(keras.layers.Layer):
     """Transformer encoder.
 
     This class follows the architecture of the transformer encoder layer in the
