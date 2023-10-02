@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from keras_nlp.api_export import keras_nlp_export
-from keras_nlp.backend import keras
-from keras_nlp.utils.keras_utils import clone_initializer
+from keras_nlp.src.api_export import keras_nlp_export
+from keras_nlp.src.backend import keras
+from keras_nlp.src.utils.keras_utils import clone_initializer
 
-from keras_nlp.layers.modeling.transformer_layer_utils import (  # isort:skip
+from keras_nlp.src.layers.modeling.transformer_layer_utils import (  # isort:skip
     merge_padding_and_attention_mask,
 )
 
