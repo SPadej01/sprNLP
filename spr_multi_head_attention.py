@@ -4,18 +4,26 @@ import string
 
 import numpy as np
 
-from keras import constraints
-from keras import initializers
-from keras import ops
-from keras import regularizers
-from keras.api_export import keras_export
-from keras.layers.activations.softmax import Softmax
-from keras.layers.core.einsum_dense import EinsumDense
-from keras.layers.layer import Layer
-from keras.layers.regularization.dropout import Dropout
+#import keras_core as keras
+
+from keras_core import constraints
+from keras_core import initializers
+from keras_core import ops
+from keras_core import regularizers
+#from keras.api_export import keras_export
+from keras_core.src.api_export import keras_core_export
+#from keras_core.layers.activations.softmax import Softmax
+from keras_core.src.layers.activations.softmax import Softmax
+#from keras.layers.core.einsum_dense import EinsumDense
+from keras_core.src.layers.core.einsum_dense import EinsumDense
+#from keras.layers.layer import Layer
+from keras_core.src.layers.layer import Layer
+#from keras.layers.regularization.dropout import Dropout
+from keras_core.src.layers.regularization.dropout import Dropout
 
 
-@keras_export("keras.layers.MultiHeadAttention")
+
+@keras_core_export("keras_core.src.layers.MultiHeadAttention")
 class SPRMultiHeadAttention(Layer):
     """MultiHeadAttention layer.
 
