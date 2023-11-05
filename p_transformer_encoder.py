@@ -4,7 +4,7 @@ from keras_nlp.src.utils.keras_utils import clone_initializer
 from keras_nlp.src.backend import keras
 
 class PTransformerEncoder(TransformerEncoder):
-      def __init__(
+      def __init__(self,
         **kwargs,    ):
         super().__init__(
           **kwargs)
