@@ -16,13 +16,18 @@ class PMultiHeadAttention(MultiHeadAttention):
   def _compute_attention(
       self, query, key, value, attention_mask=None, training=None
   ):
-      # B=1/0 - WoW - to działa :)
+      
       # Note: Applying scalar multiply at the smaller end of einsum improves
       # XLA performance, but may introduce slight numeric differences in
       # the Transformer attention head.
       query = ops.multiply(
           query, ops.cast(self._inverse_sqrt_key_dim, query.dtype)
       )
+
+
+        # # Take the dot product between "query" and "key" to get the raw
+        # # attention scores.
+        # attention_scores = ops.einsum(self._dot_product_equation, key, query)
 
       # Calculate attention scores using cosine similarity
       attention_scores = tf.keras.layers.Dot(axes=-1, normalize=True)([query, key])
