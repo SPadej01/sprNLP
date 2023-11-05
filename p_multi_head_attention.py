@@ -1,40 +1,50 @@
 #from keras.layers import MultiHeadAttention
 #Trzeba być zgodnym z Keras 3.0....
 from keras_core.src.layers import MultiHeadAttention
+from keras_core import ops
+import tensorflow as tf
 
 class PMultiHeadAttention(MultiHeadAttention):
   def __init__(
         self,
-        num_heads,
-        key_dim,
-        value_dim=None,
-        dropout=0.0,
-        use_bias=True,
-        output_shape=None,
-        attention_axes=None,
-        kernel_initializer="glorot_uniform",
-        bias_initializer="zeros",
-        kernel_regularizer=None,
-        bias_regularizer=None,
-        activity_regularizer=None,
-        kernel_constraint=None,
-        bias_constraint=None,
-        **kwargs,
+         **kwargs,
     ):
     super().__init__(
-        num_heads=num_heads,
-        key_dim=key_dim,
-        value_dim=value_dim,
-        dropout=dropout,
-        use_bias=use_bias,
-        output_shape=output_shape,
-        attention_axes=attention_axes,
-        kernel_initializer=kernel_initializer,
-        bias_initializer=bias_initializer,
-        kernel_regularizer=kernel_regularizer,
-        bias_regularizer=bias_regularizer,
-        activity_regularizer=activity_regularizer,
-        kernel_constraint=kernel_constraint,
-        bias_constraint=bias_constraint,
         **kwargs)
+
+def _compute_attention(
+    self, query, key, value, attention_mask=None, training=None
+):
+    a=0/0
+    # Note: Applying scalar multiply at the smaller end of einsum improves
+    # XLA performance, but may introduce slight numeric differences in
+    # the Transformer attention head.
+    query = ops.multiply(
+        query, ops.cast(self._inverse_sqrt_key_dim, query.dtype)
+    )
+
+
+    # Take the dot product between "query" and "key" to get the raw
+    # attention scores.
+#   attention_scores = ops.einsum(self._dot_product_equation, key, query)
+   
+    # Dot product changed to Cosine Similarity
+    attention_scores = tf.keras.layers.Dot(axes=-1, normalize=True)([query, key])
+
+    attention_scores = self._masked_softmax(
+        attention_scores, attention_mask
+    )
+
+    # This is actually dropping out entire tokens to attend to, which might
+    # seem a bit unusual, but is taken from the original Transformer paper.
+    attention_scores_dropout = self._dropout_layer(
+        attention_scores, training=training
+    )
+
+    # `context_layer` = [B, T, N, H]
+    attention_output = ops.einsum(
+        self._combine_equation, attention_scores_dropout, value
+    )
+    return attention_output, attention_scores
+
 
