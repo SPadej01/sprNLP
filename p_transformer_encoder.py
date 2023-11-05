@@ -1,5 +1,6 @@
 from keras_nlp.layers import TransformerEncoder
 from p_multi_head_attention import PMultiHeadAttention
+from keras_nlp.src.utils import clone_initializer
 
 class PTransformerEncoder(TransformerEncoder):
       def __init__(
