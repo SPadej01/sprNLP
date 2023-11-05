@@ -19,7 +19,8 @@ class PMultiHeadAttention(MultiHeadAttention):
         bias_constraint=None,
         **kwargs,
     ):
-    super().__init__(num_heads=num_heads,
+    super().__init__(
+        num_heads=num_heads,
         key_dim=key_dim,
         value_dim=value_dim,
         dropout=dropout,
