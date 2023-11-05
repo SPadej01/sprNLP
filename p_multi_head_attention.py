@@ -16,7 +16,7 @@ class PMultiHeadAttention(MultiHeadAttention):
   def _compute_attention(
       self, query, key, value, attention_mask=None, training=None
   ):
-      B=1/0
+      # B=1/0 - WoW - to działa :)
       # Note: Applying scalar multiply at the smaller end of einsum improves
       # XLA performance, but may introduce slight numeric differences in
       # the Transformer attention head.
