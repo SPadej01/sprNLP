@@ -1,4 +1,4 @@
-from keras.layers.layer import MultiHeadAttention
+from keras.layers import MultiHeadAttention
 
 class PMultiHeadAttention(MultiHeadAttention):
   def __init__(
