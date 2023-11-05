@@ -48,3 +48,51 @@ def _compute_attention(
     return attention_output, attention_scores
 
 
+def call(
+        self,
+        query,
+        value,
+        key=None,
+        query_mask=None,
+        value_mask=None,
+        key_mask=None,
+        attention_mask=None,
+        return_attention_scores=False,
+        training=None,
+        use_causal_mask=False,
+    ):
+
+        b=3/0
+        
+        if key is None:
+            key = value
+
+        attention_mask = self._compute_attention_mask(
+            query,
+            value,
+            query_mask=query_mask,
+            value_mask=value_mask,
+            key_mask=key_mask,
+            attention_mask=attention_mask,
+            use_causal_mask=use_causal_mask,
+        )
+
+        #   N = `num_attention_heads`
+        #   H = `size_per_head`
+        # `query` = [B, T, N ,H]
+        query = self._query_dense(query)
+
+        # `key` = [B, S, N, H]
+        key = self._key_dense(key)
+
+        # `value` = [B, S, N, H]
+        value = self._value_dense(value)
+
+        attention_output, attention_scores = self._compute_attention(
+            query, key, value, attention_mask, training
+        )
+        attention_output = self._output_dense(attention_output)
+
+        if return_attention_scores:
+            return attention_output, attention_scores
+        return attention_output
