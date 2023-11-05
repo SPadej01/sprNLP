@@ -1,4 +1,6 @@
-from keras.layers import MultiHeadAttention
+#from keras.layers import MultiHeadAttention
+#Trzeba być zgodnym z Keras 3.0....
+from keras_core.src.layers import MultiHeadAttention
 
 class PMultiHeadAttention(MultiHeadAttention):
   def __init__(

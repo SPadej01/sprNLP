@@ -1,6 +1,7 @@
 from keras_nlp.layers import TransformerEncoder
 from p_multi_head_attention import PMultiHeadAttention
 from keras_nlp.src.utils.keras_utils import clone_initializer
+from keras_nlp.src.backend import keras
 
 class PTransformerEncoder(TransformerEncoder):
       def __init__(
@@ -26,6 +27,7 @@ class PTransformerEncoder(TransformerEncoder):
           **kwargs)
 
       def build(self, inputs_shape):
+  
         # Infer the dimension of our hidden feature size from the build shape.
         hidden_dim = inputs_shape[-1]
         # Attention head size is `hidden_dim` over the number of heads.
@@ -38,7 +40,9 @@ class PTransformerEncoder(TransformerEncoder):
             )
 
         # Self attention layers.
-        self._self_attention_layer =PMultiHeadAttention ( #keras.layers.MultiHeadAttention(
+        self._self_attention_layer = PMultiHeadAttention ( 
+        # PMultiHeadAttention ( 
+          #keras.layers.MultiHeadAttention(
             num_heads=self.num_heads,
             key_dim=key_dim,
             dropout=self.dropout,
