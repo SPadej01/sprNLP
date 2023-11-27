@@ -13,6 +13,7 @@ class MultiHeadCosineAttention(MultiHeadAttention):
     super().__init__(
         **kwargs)
 
+
     def _compute_attention(
             self, query, key, value, attention_mask=None, training=None
     ):

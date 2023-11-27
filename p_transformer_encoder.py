@@ -33,6 +33,8 @@ class PTransformerEncoder(TransformerEncoder):
           attention_class=MultiHeadCosineAttention  # atencja kosinusowa
         elif self.attention_type=="Euclidean":
           attention_class=MultiHeadEuclideanAttention  # atencja kosinusowa
+        else:
+          raise ValueError(f"Nie wyznaczono klasy atencji dla parametru: {self.attention_type}")
 
         # Self attention layers.
         self._self_attention_layer = attention_class ( 
