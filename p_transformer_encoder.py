@@ -1,5 +1,6 @@
 from keras_nlp.layers import TransformerEncoder
 from multi_head_cosine_attention import MultiHeadCosineAttention
+from multi_head_euclidean_attention import MultiHeadEuclideanAttention
 from keras_nlp.src.utils.keras_utils import clone_initializer
 from keras_nlp.src.backend import keras
 
@@ -30,6 +31,8 @@ class PTransformerEncoder(TransformerEncoder):
           attention_class=keras.layers.MultiHeadAttention  # oryginalna klasa atencji Keras
         elif self.attention_type=="Cosine":
           attention_class=MultiHeadCosineAttention  # atencja kosinusowa
+        elif self.attention_type=="Euclidean":
+          attention_class=MultiHeadEuclideanAttention  # atencja kosinusowa
 
         # Self attention layers.
         self._self_attention_layer = attention_class ( 
