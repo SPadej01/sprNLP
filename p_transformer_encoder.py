@@ -5,7 +5,9 @@ from keras_nlp.src.backend import keras
 
 class PTransformerEncoder(TransformerEncoder):
       def __init__(self,
+      attention_type,
         **kwargs,    ):
+        self.attention_type=attention_type
         super().__init__(
           **kwargs)
 
@@ -22,8 +24,15 @@ class PTransformerEncoder(TransformerEncoder):
                 f"or greater than `num_heads` value of {self.num_heads}."
             )
 
+        # wyb
+        attention_class = None
+        if self.attention_type=="DOT":
+          attention_class=keras.layers.MultiHeadAttention
+        elif self.attention_type=="Cosine":
+          attention_class=PMultiHeadAttention
+
         # Self attention layers.
-        self._self_attention_layer = PMultiHeadAttention ( 
+        self._self_attention_layer = attention_class ( 
         # PMultiHeadAttention ( 
           #keras.layers.MultiHeadAttention(
             num_heads=self.num_heads,
@@ -32,7 +41,7 @@ class PTransformerEncoder(TransformerEncoder):
             kernel_initializer=clone_initializer(self.kernel_initializer),
             bias_initializer=clone_initializer(self.bias_initializer),
             dtype=self.dtype_policy,
-            name="self_attention_layer",
+            name=f"attention_{self.attention_type}",
         )
         if hasattr(self._self_attention_layer, "_build_from_signature"):
             self._self_attention_layer._build_from_signature(
