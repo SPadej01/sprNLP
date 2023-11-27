@@ -1,5 +1,5 @@
 from keras_nlp.layers import TransformerEncoder
-from multi_head_cossine_attention import MultiHeadCosineAttention
+from multi_head_cosine_attention import MultiHeadCosineAttention
 from keras_nlp.src.utils.keras_utils import clone_initializer
 from keras_nlp.src.backend import keras
 
