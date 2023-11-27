@@ -26,6 +26,7 @@ class PTransformerEncoder(TransformerEncoder):
                 f"The `hidden_dim` value of {hidden_dim} has to be equal to "
                 f"or greater than `num_heads` value of {self.num_heads}."
             )
+        self._name = f"{self.__class__.__name__}_{self.attention_type}"
 
         # wyb
         attention_class = None
