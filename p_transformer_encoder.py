@@ -36,10 +36,8 @@ class PTransformerEncoder(TransformerEncoder):
         else:
           raise ValueError(f"Nie wyznaczono klasy atencji dla parametru: {self.attention_type}")
 
-        # Self attention layers.
+        # Wywołaj wskazaną w parametrze klasę atencji
         self._self_attention_layer = attention_class ( 
-        # PMultiHeadAttention ( 
-          #keras.layers.MultiHeadAttention(
             num_heads=self.num_heads,
             key_dim=key_dim,
             dropout=self.dropout,
