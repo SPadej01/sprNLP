@@ -2,6 +2,7 @@ from keras_nlp.layers import TransformerEncoder
 from multi_head_cosine_attention import MultiHeadCosineAttention
 from multi_head_euclidean_attention import MultiHeadEuclideanAttention
 from multi_head_smoothed_cosine_attention import MultiHeadSmoothedCosineAttention
+from multi_head_manhattan_attention import MultiHeadManhattanAttention
 from keras_nlp.src.utils.keras_utils import clone_initializer
 from keras_nlp.src.backend import keras
 
@@ -36,6 +37,10 @@ class PTransformerEncoder(TransformerEncoder):
           attention_class=MultiHeadEuclideanAttention  # atencja euklidesowa
         elif self.attention_type=="SmoothedCosine":
           attention_class=MultiHeadSmoothedCosineAttention  # atencja euklidesowa
+        elif self.attention_type=="Manhattan":
+          attention_class=MultiHeadManhattanAttention  # atencja euklidesowa
+
+
         else:
           raise ValueError(f"Nie wyznaczono klasy atencji dla parametru: {self.attention_type}")
 
