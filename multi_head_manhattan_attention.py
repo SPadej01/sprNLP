@@ -6,7 +6,10 @@ import tensorflow as tf
 import numpy as np
 
 
-
+"""
+Override the MultiHeadAttention class using Manhattan distance
+as similarity measure to  calculate attention scores.
+"""
 
 class MultiHeadManhattanAttention(MultiHeadAttention):
   def __init__(

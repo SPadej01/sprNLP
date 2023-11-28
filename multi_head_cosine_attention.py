@@ -5,6 +5,19 @@ from keras_core import ops
 import tensorflow as tf
 import numpy as np
 
+"""
+Overriding the MultiHeadAttention class by applying cosine similarity
+Cosine similarity is a measure of the similarity between two vectors that calculates the cosine of the angle between them.
+The cosine similarity value ranges from -1 (completely different) to 1 (identical).
+
+In the case of cosine similarity, the calculations are as follows:
+
+1. Calculate the cosine similarity between query and key vectors.
+2. Optionally, scale the cosine similarity results (e.g. by multiplying by a constant value).
+3. Apply the softmax function to normalize the cosine similarity results.
+4. Calculate self-attention values ​​by multiplying the normalized weights by the value vectors.
+
+"""
 class MultiHeadCosineAttention(MultiHeadAttention):
   def __init__(
         self,
@@ -19,10 +32,6 @@ class MultiHeadCosineAttention(MultiHeadAttention):
     ):
         """Applies Cosine Similarity attention with query, key, value tensors.
 
-        This function defines the computation inside `call` with projected
-        multi-head Q, K, V inputs. Users can override this function for
-        customized attention implementation.
-
         Args:
             query: Projected query tensor of shape `(B, T, N, key_dim)`.
             key: Projected key tensor of shape `(B, S, N, key_dim)`.
@@ -31,18 +40,18 @@ class MultiHeadCosineAttention(MultiHeadAttention):
                 attention to certain positions. It is generally not needed if
                 the `query` and `value` (and/or `key`) are masked.
             training: Python boolean indicating whether the layer should behave
-                in training mode (adding dropout) or in inference mode (doing
-                nothing).
+                in training mode (adding dropout) or in inference mode (no dropout).
 
         Returns:
           attention_output: Multi-headed outputs of attention computation.
           attention_scores: Multi-headed attention weights.
         """
-        # Normalize query and key
+
+        # Queries and keys normalization
         query = query / np.linalg.norm(query, axis=-1, keepdims=True)
         key = key / np.linalg.norm(key, axis=-1, keepdims=True)
 
-        # Compute cosine similarity between "query" and "key"
+        # Calculate cosine similairy between keys and queries
         attention_scores = ops.einsum(self._dot_product_equation, key, query)
 
         attention_scores = self._masked_softmax(

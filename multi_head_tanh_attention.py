@@ -5,6 +5,10 @@ from keras_core import ops
 import tensorflow as tf
 import numpy as np
 
+"""
+Nadpisanie klasy MultiHeadAttention poprzez dodanie funkcji tangensa hiperbolicznego
+do obliczeń wyników podobieństwa ( attention scores ). 
+"""
 class MultiHeadTanhAttention(MultiHeadAttention):
   def __init__(
         self,
@@ -21,7 +25,7 @@ class MultiHeadTanhAttention(MultiHeadAttention):
             query, ops.cast(self._inverse_sqrt_key_dim, query.dtype)
         )
 
-        # Zamiast iloczynu skalarnego używamy tangensa hiperbolicznego
+        # Do obliczeń funkji podobieństwa dodajemy przekształecenie przez tangens hiperboliczny
         attention_scores = tf.math.tanh(ops.einsum(self._dot_product_equation, key, query))
 
         attention_scores = self._masked_softmax(
