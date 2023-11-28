@@ -6,17 +6,23 @@ import tensorflow as tf
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
+"""
+Override the MultiHeadAttention class using Smoothed Cosine Similarity
+as similarity measure to  calculate attention scores.
+"""
+
+
 def smoothed_cosine_similarity(x, y, smoothing=1e-8):
     """
-    Oblicza Smoothed Cosine Similarity między dwoma wektorami x i y.
+  Calculates Smoothed Cosine Similarity between two vectors x and y.
     
     Args:
-        x: Wektor 1.
-        y: Wektor 2.
-        smoothing: Wartość wygładzania (domyślnie 1e-8).
+        x: Vector 1.
+        y: Vector 2.
+        smoothing: Smoothing value (default 1e-8).
         
     Returns:
-        Smoothed Cosine Similarity między x i y.
+        Smoothed Cosine Similarity between x and y.
     """
     return cosine_similarity(x.reshape(1, -1), y.reshape(1, -1)) + smoothing
 
@@ -38,11 +44,29 @@ class MultiHeadSmoothedCosineAttention(MultiHeadAttention):
     def _compute_attention(
         self, query, key, value, attention_mask=None, training=None
     ):
+        """Applies Smoothed Cosine Similarity attention with query, key, value tensors.
+
+            Args:
+                query: Projected query tensor of shape `(B, T, N, key_dim)`.
+                key: Projected key tensor of shape `(B, S, N, key_dim)`.
+                value: Projected value tensor of shape `(B, S, N, value_dim)`.
+                attention_mask: a boolean mask of shape `(B, T, S)`, that prevents
+                    attention to certain positions. It is generally not needed if
+                    the `query` and `value` (and/or `key`) are masked.
+                training: Python boolean indicating whether the layer should behave
+                    in training mode (adding dropout) or in inference mode (no dropout).
+
+            Returns:
+              attention_output: Multi-headed outputs of attention computation.
+              attention_scores: Multi-headed attention weights.
+        """
+
+
         query = ops.multiply(
             query, ops.cast(self._inverse_sqrt_key_dim, query.dtype)
         )
 
-        # Obliczanie Smoothed Cosine Similarity między "query" i "key"
+        # Calculates Smoothed Cosine Similarity between "query" i "key"
         attention_scores = np.zeros(
             (query.shape[0], query.shape[1], key.shape[1], key.shape[2])
         )
