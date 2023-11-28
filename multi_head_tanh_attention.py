@@ -6,8 +6,7 @@ import tensorflow as tf
 import numpy as np
 
 """
-Nadpisanie klasy MultiHeadAttention poprzez dodanie funkcji tangensa hiperbolicznego
-do obliczeń wyników podobieństwa ( attention scores ). 
+Override the MultiHeadAttention class with use of hyperbolic tangens to calculate attention scores. 
 """
 class MultiHeadTanhAttention(MultiHeadAttention):
   def __init__(
