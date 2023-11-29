@@ -58,7 +58,7 @@ class PTransformerEncoder(TransformerEncoder):
             dtype=self.dtype_policy,
             name=f"attention_{self.attention_type}",
         )
-        if hasattr(self._self_, , "_build_from_signature"):
+        if hasattr(self._self_, "_build_from_signature"):
             self._self_attention_layer._build_from_signature(
                 query=inputs_shape,
                 value=inputs_shape,
