@@ -4,9 +4,27 @@ from multi_head_euclidean_attention import MultiHeadEuclideanAttention
 from multi_head_smoothed_cosine_attention import MultiHeadSmoothedCosineAttention
 from multi_head_manhattan_attention import MultiHeadManhattanAttention
 from multi_head_tanh_attention import MultiHeadTanhAttention
+from multi_head_sigmoid_attention import MultiHeadSigmoidAttention
+from multi_head_sigmoidL1_attention import MultiHeadSigmoidL1Attention
 
 from keras_nlp.src.utils.keras_utils import clone_initializer
 from keras_nlp.src.backend import keras
+
+
+
+
+attentions = {"DOT":keras.layers.MultiHeadAttention,
+            "Cosine":MultiHeadCosineAttention,
+            "Euclidean":MultiHeadEuclideanAttention,
+            "SmoothedCosine":MultiHeadSmoothedCosineAttention,
+            "Manhattan":MultiHeadManhattanAttention,
+            "Tanh":MultiHeadTanhAttention,
+            "Sigmoid":MultiHeadSigmoidAttention,
+            "SigmoidL1":MultiHeadSigmoidL1Attention
+            }
+
+
+
 
 class PTransformerEncoder(TransformerEncoder):
       def __init__(self,
@@ -30,21 +48,9 @@ class PTransformerEncoder(TransformerEncoder):
             )
         self._name = f"{self.__class__.__name__}_{self.attention_type}"
 
-        # wyb
-        attention_class = None
-        if self.attention_type=="DOT":
-          attention_class=keras.layers.MultiHeadAttention  # oryginalna klasa atencji Keras
-        elif self.attention_type=="Cosine":
-          attention_class=MultiHeadCosineAttention  # atencja kosinusowa
-        elif self.attention_type=="Euclidean":
-          attention_class=MultiHeadEuclideanAttention  # atencja euklidesowa
-        elif self.attention_type=="SmoothedCosine":
-          attention_class=MultiHeadSmoothedCosineAttention  # atencja euklidesowa
-        elif self.attention_type=="Manhattan":
-          attention_class=MultiHeadManhattanAttention  # atencja euklidesowa
-        elif self.attention_type=="Tanh":
-          attention_class=MultiHeadTanhAttention  # atencja euklidesowa
-
+        # pobierz klase atencji bazując na parametrze
+        if self.attention_type in attentions.keys():
+          attention_class = attentions[self.attention_type]
         else:
           raise ValueError(f"Nie wyznaczono klasy atencji dla parametru: {self.attention_type}")
 
