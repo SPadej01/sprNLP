@@ -6,6 +6,7 @@ from multi_head_manhattan_attention import MultiHeadManhattanAttention
 from multi_head_tanh_attention import MultiHeadTanhAttention
 from multi_head_sigmoid_attention import MultiHeadSigmoidAttention
 from multi_head_sigmoidL1_attention import MultiHeadSigmoidL1Attention
+from multi_head_sigmoid_noSM_attention import MultiHeadSigmoidNoSMAttention
 
 from keras_nlp.src.utils.keras_utils import clone_initializer
 from keras_nlp.src.backend import keras
@@ -20,7 +21,8 @@ attentions = {"DOT":keras.layers.MultiHeadAttention,
             "Manhattan":MultiHeadManhattanAttention,
             "Tanh":MultiHeadTanhAttention,
             "Sigmoid":MultiHeadSigmoidAttention,
-            "SigmoidL1":MultiHeadSigmoidL1Attention
+            "SigmoidL1":MultiHeadSigmoidL1Attention,
+            "SigmoidNoSM":MultiHeadSigmoidNoSMAttention
             }
 
 
