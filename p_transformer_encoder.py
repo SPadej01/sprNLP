@@ -7,6 +7,8 @@ from multi_head_tanh_attention import MultiHeadTanhAttention
 from multi_head_sigmoid_attention import MultiHeadSigmoidAttention
 from multi_head_sigmoidL1_attention import MultiHeadSigmoidL1Attention
 from multi_head_sigmoid_noSM_attention import MultiHeadSigmoidNoSMAttention
+from multi_head_sigmoid_sigmoid_noSM_attention import MultiHeadSigmoidSigmoidNoSMAttention
+
 
 from keras_nlp.src.utils.keras_utils import clone_initializer
 from keras_nlp.src.backend import keras
@@ -22,7 +24,10 @@ attentions = {"DOT":keras.layers.MultiHeadAttention,
             "Tanh":MultiHeadTanhAttention,
             "Sigmoid":MultiHeadSigmoidAttention,
             "SigmoidL1":MultiHeadSigmoidL1Attention,
-            "SigmoidNoSM":MultiHeadSigmoidNoSMAttention
+            "SigmoidNoSM":MultiHeadSigmoidNoSMAttention,
+            "SigmoidSigmoidNoSM":MultiHeadSigmoidSigmoidNoSMAttention,
+            
+
             }
 
 
