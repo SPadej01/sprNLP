@@ -27,9 +27,9 @@ from keras_nlp.layers import TransformerDecoder
 from keras_nlp.src.api_export import keras_nlp_export
 from keras_nlp.src.backend import keras
 from keras_nlp.src.backend import ops
-# from keras_nlp.src.layers.modeling.cached_multi_head_attention import (
-#     CachedMultiHeadAttention,
-# )
+from keras_nlp.src.layers.modeling.cached_multi_head_attention import (
+    CachedMultiHeadAttention,
+)
 
 from keras_nlp.src.utils.keras_utils import clone_initializer
 
@@ -40,8 +40,8 @@ from keras_nlp.src.layers.modeling.transformer_layer_utils import (  # isort:ski
 )
 
 
-attentions = {#"DOT":CachedMultiHeadAttention,
-            "DOT":keras.layers.MultiHeadAttention,
+attentions = {
+            "DOT":CachedMultiHeadAttention,
             "Cosine":MultiHeadCosineAttention,
             "Euclidean":MultiHeadEuclideanAttention,
             "SmoothedCosine":MultiHeadSmoothedCosineAttention,
