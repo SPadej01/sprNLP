@@ -73,6 +73,7 @@ class CachedCosineMultiHeadAttention(MultiHeadAttention):
         cache=None,
         cache_update_index=None,
     ):
+        print(type(f'*********** OK włazimy do call******************'))
         if (
             hasattr(self, "_build_from_signature")
             and not self._built_from_signature
@@ -120,6 +121,7 @@ class CachedCosineMultiHeadAttention(MultiHeadAttention):
        # Queries and keys normalization
         # query = tf.math.l2_normalize(query, axis=-1)
         # key = tf.math.l2_normalize(key, axis=-1)
+        
         query = query / np.linalg.norm(query, axis=-1, keepdims=True)
         key = key / np.linalg.norm(key, axis=-1, keepdims=True)
 
