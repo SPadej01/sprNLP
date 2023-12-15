@@ -6,7 +6,7 @@ from keras_core.src.layers import MultiHeadAttention
 #     CachedMultiHeadAttention,
 # )
 
-class CachedCosineMultiHeadAttention(MultiHeadAttention):
+class CachedEuclideanMultiHeadAttention(MultiHeadAttention):
     """MultiHeadAttention layer with cache support.
 
     This layer is suitable for use in autoregressive decoding. It can be used
@@ -112,13 +112,13 @@ class CachedCosineMultiHeadAttention(MultiHeadAttention):
             key = self._key_dense(key)
             value = self._value_dense(value)
 
-        # query = ops.multiply(
-        #     query,
-        #     1.0 / ops.sqrt(ops.cast(self._key_dim, query.dtype)),
-        # )
+        query = ops.multiply(
+            query,
+            1.0 / ops.sqrt(ops.cast(self._key_dim, query.dtype)),
+        )
        # Queries and keys normalization
-        query = tf.math.l2_normalize(query, axis=-1)
-        key = tf.math.l2_normalize(key, axis=-1)
+        # query = tf.math.l2_normalize(query, axis=-1)
+        # key = tf.math.l2_normalize(key, axis=-1)
 
         # Calculate cosine similairy between keys and queries
         attention_scores = ops.einsum(self._dot_product_equation, key, query)
