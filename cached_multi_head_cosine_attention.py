@@ -1,8 +1,12 @@
-from keras_nlp.src.layers.modeling.cached_multi_head_attention import (
-    CachedMultiHeadAttention,
-)
+import tensorflow as tf
+from keras_nlp.src.backend import ops
+from keras_core.src.layers import MultiHeadAttention
 
-class CachedCosineMultiHeadAttention(CachedMultiHeadAttention):
+# from keras_nlp.src.layers.modeling.cached_multi_head_attention import (
+#     CachedMultiHeadAttention,
+# )
+
+class CachedCosineMultiHeadAttention(MultiHeadAttention):
     """MultiHeadAttention layer with cache support.
 
     This layer is suitable for use in autoregressive decoding. It can be used
@@ -112,6 +116,11 @@ class CachedCosineMultiHeadAttention(CachedMultiHeadAttention):
             query,
             1.0 / ops.sqrt(ops.cast(self._key_dim, query.dtype)),
         )
+       # Queries and keys normalization
+        # query = tf.math.l2_normalize(query, axis=-1)
+        # key = tf.math.l2_normalize(key, axis=-1)
+
+        # Calculate cosine similairy between keys and queries
         attention_scores = ops.einsum(self._dot_product_equation, key, query)
         attention_scores = self._masked_softmax(
             attention_scores, attention_mask

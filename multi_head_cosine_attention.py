@@ -48,8 +48,11 @@ class MultiHeadCosineAttention(MultiHeadAttention):
         """
 
         # Queries and keys normalization
-        query = query / np.linalg.norm(query, axis=-1, keepdims=True)
-        key = key / np.linalg.norm(key, axis=-1, keepdims=True)
+        # query = query / np.linalg.norm(query, axis=-1, keepdims=True)
+        # key = key / np.linalg.norm(key, axis=-1, keepdims=True)
+
+        query = tf.math.l2_normalize(query, axis=-1)
+        key = tf.math.l2_normalize(key, axis=-1)
 
         # Calculate cosine similairy between keys and queries
         attention_scores = ops.einsum(self._dot_product_equation, key, query)
