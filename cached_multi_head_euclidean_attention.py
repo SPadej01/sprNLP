@@ -1,4 +1,5 @@
 import tensorflow as tf
+import numpy as np
 from keras_nlp.src.backend import ops
 from keras_core.src.layers import MultiHeadAttention
 
@@ -72,6 +73,7 @@ class CachedEuclideanMultiHeadAttention(MultiHeadAttention):
         cache=None,
         cache_update_index=None,
     ):
+        
         if (
             hasattr(self, "_build_from_signature")
             and not self._built_from_signature
@@ -116,12 +118,17 @@ class CachedEuclideanMultiHeadAttention(MultiHeadAttention):
             query,
             1.0 / ops.sqrt(ops.cast(self._key_dim, query.dtype)),
         )
-       # Queries and keys normalization
-        # query = tf.math.l2_normalize(query, axis=-1)
-        # key = tf.math.l2_normalize(key, axis=-1)
 
-        # Calculate cosine similairy between keys and queries
-        attention_scores = ops.einsum(self._dot_product_equation, key, query)
+        # Obliczanie odległości euklidesowej między key i query przy użyciu funkcji ops
+        squared_diffs = ops.square(ops.expand_dims(query, axis=1) - ops.expand_dims(key, axis=2))
+        euclidean_distance = ops.sum(squared_diffs, axis=-1)
+        attention_scores = -euclidean_distance
+
+        # Zmiana kształtu attention_scores, aby pasował do attention_mask.
+        # Uwzglednic nleży ilość głów.
+        attention_scores = ops.reshape(attention_scores, (attention_scores.shape[0], self._num_heads, attention_scores.shape[1], attention_scores.shape[2]))
+
+        # Normalizacja wyników uwagi
         attention_scores = self._masked_softmax(
             attention_scores, attention_mask
         )

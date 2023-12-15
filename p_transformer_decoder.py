@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from cached_multi_head_cosine_attention import CachedCosineMultiHeadAttention
-from multi_head_euclidean_attention import MultiHeadEuclideanAttention
+from cached_multi_head_euclidean_attention import CachedEuclideanMultiHeadAttention
 from multi_head_smoothed_cosine_attention import MultiHeadSmoothedCosineAttention
 from multi_head_manhattan_attention import MultiHeadManhattanAttention
 from multi_head_tanh_attention import MultiHeadTanhAttention
@@ -43,7 +43,7 @@ from keras_nlp.src.layers.modeling.transformer_layer_utils import (  # isort:ski
 attentions = {
             "DOT":CachedMultiHeadAttention,
             "Cosine":CachedCosineMultiHeadAttention,
-            "Euclidean":MultiHeadEuclideanAttention,
+            "Euclidean":CachedEuclideanMultiHeadAttention,
             "SmoothedCosine":MultiHeadSmoothedCosineAttention,
             "Manhattan":MultiHeadManhattanAttention,
             "Tanh":MultiHeadTanhAttention,
