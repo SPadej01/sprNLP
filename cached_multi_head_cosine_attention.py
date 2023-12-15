@@ -73,7 +73,7 @@ class CachedCosineMultiHeadAttention(MultiHeadAttention):
         cache=None,
         cache_update_index=None,
     ):
-        print(type(f'*********** OK włazimy do call******************'))
+        
         if (
             hasattr(self, "_build_from_signature")
             and not self._built_from_signature
@@ -114,19 +114,22 @@ class CachedCosineMultiHeadAttention(MultiHeadAttention):
             key = self._key_dense(key)
             value = self._value_dense(value)
 
+      # Remove scalling query because the query, key vectors are scalled using L2 norm
         # query = ops.multiply(
         #     query,
         #     1.0 / ops.sqrt(ops.cast(self._key_dim, query.dtype)),
         # )
-       # Queries and keys normalization
-        # query = tf.math.l2_normalize(query, axis=-1)
-        # key = tf.math.l2_normalize(key, axis=-1)
-        
-        query = query / np.linalg.norm(query, axis=-1, keepdims=True)
-        key = key / np.linalg.norm(key, axis=-1, keepdims=True)
+        # attention_scores = ops.einsum(self._dot_product_equation, key, query)
 
-        # Calculate cosine similairy between keys and queries
-        attention_scores = ops.einsum(self._dot_product_equation, key, query)
+      # calculate L2 norm using ops functions 
+        query_norm = ops.sqrt(ops.sum(ops.square(query), axis=-1, keepdims=True))
+        key_norm = ops.sqrt(ops.sum(ops.square(key), axis=-1, keepdims=True))
+        normalized_query = query / query_norm
+        normalized_key = key / key_norm
+        # calculate cosine similarity
+        attention_scores = ops.einsum(self._dot_product_equation, normalized_key, normalized_query)
+        
+
         attention_scores = self._masked_softmax(
             attention_scores, attention_mask
         )

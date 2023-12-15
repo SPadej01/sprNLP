@@ -157,6 +157,7 @@ class PTransformerDecoder(TransformerDecoder):
         # pobierz klase atencji bazując na parametrze
         if self.attention_type in attentions.keys():
           attention_class = attentions[self.attention_type]
+          print(f"Wyznaczono klasę atencji dla: {self.attention_type}: {attention_class}")
         else:
           raise ValueError(f"Nie wyznaczono klasy atencji dla parametru: {self.attention_type}")
 
