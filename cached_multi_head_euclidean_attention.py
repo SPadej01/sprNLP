@@ -132,7 +132,7 @@ class CachedEuclideanMultiHeadAttention(MultiHeadAttention):
         euclidean_distance = ops.sqrt(sum_squared_diff)  # Wynik: (B, T, S*)
 
         # Transponujemy wynik, aby uzyskać wymiary (B, S*, T, T)
-        euclidean_distance = ops.transpose(euclidean_distance, (0, 3, 2, 1))  # Wynik: (B, 8, 40, 40)
+        euclidean_distance = ops.transpose(euclidean_distance, (0, 3,1,2))  # Wynik: (B, 8, 40, 40)
         
                 
         dot_product = ops.einsum(self._dot_product_equation, key, query)
