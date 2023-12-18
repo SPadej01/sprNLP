@@ -1,7 +1,7 @@
 #from keras.layers import MultiHeadAttention
 #Trzeba być zgodnym z Keras 3.0....
 from keras_core.src.layers import MultiHeadAttention
-from keras_core import ops
+from keras_core import ops, backend
 import tensorflow as tf
 import numpy as np
 
@@ -126,11 +126,21 @@ class CahedMultiHeadManhattanAttention(MultiHeadAttention):
 
         # Obliczamy odległość Manhattan między tensorem query i key
         manhattan_distance = ops.sum(ops.abs(query_expanded - key_expanded), axis=-1)  # Wynik: (B, T, S*)
+        #manhattan_distance = backend.permute_dimensions(manhattan_distance, (0, 2, 1, 3))
+        manhattan_distance = ops.transpose(manhattan_distance,(0, 2, 1, 3))  # transpozycja by uzyskać zgodność wymiarów z maską
+        # attention_scores=manhattan_distance
+        #keras.ops.transpose(x, axes=None)
 
+        print(f'Shape of manhattan_distance:{manhattan_distance.shape}')
         attention_scores = manhattan_distance
 
         # Dot Product
-        # attention_scores = ops.einsum(self._dot_product_equation, key, query)
+        print(f'self._dot_product_equation: {self._dot_product_equation}')
+        attention_scores = ops.einsum(self._dot_product_equation, key, query)
+        print(f'Shape of dot product:{attention_scores.shape}')
+        print(f'Shape of key:{key.shape}')
+        print(f'Shape of query:{query.shape}')
+        print(f'Shape of attention_mask:{attention_mask.shape}')
         
 
 

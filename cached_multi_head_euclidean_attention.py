@@ -119,14 +119,37 @@ class CachedEuclideanMultiHeadAttention(MultiHeadAttention):
             1.0 / ops.sqrt(ops.cast(self._key_dim, query.dtype)),
         )
 
-        # Obliczanie odległości euklidesowej między key i query przy użyciu funkcji ops
-        squared_diffs = ops.square(ops.expand_dims(query, axis=1) - ops.expand_dims(key, axis=2))
-        euclidean_distance = ops.sum(squared_diffs, axis=-1)
-        attention_scores = -euclidean_distance
+        query_expanded = ops.expand_dims(query, axis=2)  
+        key_expanded = ops.expand_dims(key, axis=1) 
 
-        # Zmiana kształtu attention_scores, aby pasował do attention_mask.
-        # Uwzglednic nleży ilość głów.
-        attention_scores = ops.reshape(attention_scores, (attention_scores.shape[0], self._num_heads, attention_scores.shape[1], attention_scores.shape[2]))
+        # Obliczamy kwadrat różnicy między tensorem query i key
+        squared_diff = ops.square(query_expanded - key_expanded)  # Wynik: (B, T, S*, dim)
+
+        # Sumujemy kwadraty różnic wzdłuż ostatniego wymiaru (dim)
+        sum_squared_diff = ops.sum(squared_diff, axis=-1)  # Wynik: (B, T, S*)
+
+        # Obliczamy pierwiastek kwadratowy z sumy kwadratów różnic
+        euclidean_distance = ops.sqrt(sum_squared_diff)  # Wynik: (B, T, S*)
+
+        # Transponujemy wynik, aby uzyskać wymiary (B, S*, T, T)
+        euclidean_distance = ops.transpose(euclidean_distance, (0, 3, 2, 1))  # Wynik: (B, 8, 40, 40)
+        
+                
+        dot_product = ops.einsum(self._dot_product_equation, key, query)
+
+        attention_scores= euclidean_distance
+
+
+        # print(f'Shape of key:{key.shape}')
+        # print(f'Shape of query:{query.shape}')
+        # print(f'Shape of key_expanded:{key_expanded.shape}')
+        # print(f'Shape of query_expanded:{query_expanded.shape}')
+        
+        # print(f'Shape of query:{query.shape}')
+        # print(f'Shape of euclidean_distance:{euclidean_distance.shape}')
+        # print(f'self._dot_product_equation:{self._dot_product_equation}')
+        # print(f'Shape of dot_product:{dot_product.shape}')
+
 
         # Normalizacja wyników uwagi
         attention_scores = self._masked_softmax(
