@@ -135,7 +135,7 @@ class CachedEuclideanMultiHeadAttention(MultiHeadAttention):
         euclidean_distance = ops.transpose(euclidean_distance, (0, 3,1,2))  # Wynik: (B, 8, 40, 40)
         
                 
-        dot_product = ops.einsum(self._dot_product_equation, key, query)
+        # dot_product = ops.einsum(self._dot_product_equation, key, query)
 
         attention_scores= euclidean_distance
 
