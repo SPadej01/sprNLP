@@ -114,21 +114,14 @@ class CachedTahnMultiHeadAttention(MultiHeadAttention):
             key = self._key_dense(key)
             value = self._value_dense(value)
 
-      # Remove scalling query because the query, key vectors are scalled using L2 norm
-        # query = ops.multiply(
-        #     query,
-        #     1.0 / ops.sqrt(ops.cast(self._key_dim, query.dtype)),
-        # )
-        # attention_scores = ops.einsum(self._dot_product_equation, key, query)
+        query = ops.multiply(
+            query,
+            1.0 / ops.sqrt(ops.cast(self._key_dim, query.dtype)),
+        )
+        attention_scores = ops.einsum(self._dot_product_equation, key, query)
 
-      # calculate L2 norm using ops functions 
-        query_norm = ops.sqrt(ops.sum(ops.square(query), axis=-1, keepdims=True))
-        key_norm = ops.sqrt(ops.sum(ops.square(key), axis=-1, keepdims=True))
-        normalized_query = query / query_norm
-        normalized_key = key / key_norm
-        # calculate cosine similarity
-        attention_scores = ops.einsum(self._dot_product_equation, normalized_key, normalized_query)
-        
+        attention_scores=ops.tanh(attention_scores)  # Apply hyperbolic tangens to attention scores
+               
 
         attention_scores = self._masked_softmax(
             attention_scores, attention_mask
