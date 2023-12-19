@@ -2,7 +2,7 @@
 #Trzeba być zgodnym z Keras 3.0....
 from keras_core.src.layers import MultiHeadAttention
 from keras_core import ops
-import tensorflow as tf
+# import tensorflow as tf
 import numpy as np
 
 """
@@ -43,8 +43,8 @@ class MultiHeadTanhAttention(MultiHeadAttention):
             query, ops.cast(self._inverse_sqrt_key_dim, query.dtype)
         )
 
-        # We add the hyperbolic tangent transformation to the calculation of the similarity function
-        attention_scores = tf.math.tanh(ops.einsum(self._dot_product_equation, key, query))
+        attention_scores = ops.einsum(self._dot_product_equation, key, query)
+        attention_scores=ops.tanh(attention_scores)  # Apply hyperbolic tangens to attention scores
 
         attention_scores = self._masked_softmax(
             attention_scores, attention_mask

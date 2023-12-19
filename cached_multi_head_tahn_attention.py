@@ -119,7 +119,6 @@ class CachedTahnMultiHeadAttention(MultiHeadAttention):
             1.0 / ops.sqrt(ops.cast(self._key_dim, query.dtype)),
         )
         attention_scores = ops.einsum(self._dot_product_equation, key, query)
-
         attention_scores=ops.tanh(attention_scores)  # Apply hyperbolic tangens to attention scores
                
 
