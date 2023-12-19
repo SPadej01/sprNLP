@@ -120,30 +120,31 @@ class CahedMultiHeadManhattanAttention(MultiHeadAttention):
             query,
             1.0 / ops.sqrt(ops.cast(self._key_dim, query.dtype)),
         )
-        # Zakładając, że query i key są tensorem o wymiarach (B, T, dim) i (B, S*, dim) odpowiednio
-        query_expanded = ops.expand_dims(query, axis=-1)  # Dodajemy dodatkowy wymiar (B, T, dim, 1)
-        key_expanded = ops.expand_dims(key, axis=-2)  # Dodajemy dodatkowy wymiar (B, S*, 1, dim)
+        
+        # Konieczne poszerzenie wymiarów do obliczeń
+        query_expanded = ops.expand_dims(query, axis=2)  
+        key_expanded = ops.expand_dims(key, axis=1) 
 
         # Obliczamy odległość Manhattan między tensorem query i key
         manhattan_distance = ops.sum(ops.abs(query_expanded - key_expanded), axis=-1)  # Wynik: (B, T, S*)
-        #manhattan_distance = backend.permute_dimensions(manhattan_distance, (0, 2, 1, 3))
-        manhattan_distance = ops.transpose(manhattan_distance,(0, 2, 1, 3))  # transpozycja by uzyskać zgodność wymiarów z maską
-        # attention_scores=manhattan_distance
-        #keras.ops.transpose(x, axes=None)
-
-        print(f'Shape of manhattan_distance:{manhattan_distance.shape}')
-        attention_scores = manhattan_distance
-
-        # Dot Product
-        print(f'self._dot_product_equation: {self._dot_product_equation}')
-        attention_scores = ops.einsum(self._dot_product_equation, key, query)
-        print(f'Shape of dot product:{attention_scores.shape}')
-        print(f'Shape of key:{key.shape}')
-        print(f'Shape of query:{query.shape}')
-        print(f'Shape of attention_mask:{attention_mask.shape}')
+        manhattan_distance = ops.transpose(manhattan_distance,(0, 3,1,2))  # transpozycja by uzyskać zgodność wymiarów z maską
         
-
-
+        # dot_product = ops.einsum(self._dot_product_equation, key, query)
+        
+        attention_scores = manhattan_distance
+        # if manhattan_distance is not None:
+        #   print(f'Shape of manhattan_distance:{manhattan_distance.shape}')
+        # if self._dot_product_equation is not None:
+        #   print(f'self._dot_product_equation: {self._dot_product_equation}')
+        # if attention_scores is not None:
+        #   print(f'Shape of dot product:{attention_scores.shape}')
+        # if key is not None:
+        #   print(f'Shape of key:{key.shape}')
+        # if query is not None:
+        #   print(f'Shape of query:{query.shape}')
+        # if attention_mask is not None:
+        #   print(f'Shape of attention_mask:{attention_mask.shape}')
+        
         attention_scores = self._masked_softmax(
             attention_scores, attention_mask
         )

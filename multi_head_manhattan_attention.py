@@ -43,7 +43,17 @@ def _compute_attention(
       attention_scores: Multi-headed attention weights.
     """
     # Compute the Manhattan distance between query and key tensors.
-    attention_scores = tf.reduce_sum(tf.abs(query[:, :, :, :, None] - key[:, :, :, None, :, :]), axis=-1)
+    # Key and query dimensions must be expanded for calculs
+    query_expanded = ops.expand_dims(query, axis=2)  
+    key_expanded = ops.expand_dims(key, axis=1) 
+
+    # Obliczamy odległość Manhattan między tensorem query i key
+    manhattan_distance = ops.sum(ops.abs(query_expanded - key_expanded), axis=-1)  # Wynik: (B, T, S*)
+    manhattan_distance = ops.transpose(manhattan_distance,(0, 3,1,2))  # transpozycja by uzyskać zgodność wymiarów z maską
+    
+    # dot_product = ops.einsum(self._dot_product_equation, key, query)
+    
+    attention_scores = manhattan_distance
 
     attention_scores = self._masked_softmax(
         attention_scores, attention_mask
