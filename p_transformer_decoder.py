@@ -16,7 +16,7 @@ from cached_multi_head_cosine_attention import CachedCosineMultiHeadAttention
 from cached_multi_head_euclidean_attention import CachedEuclideanMultiHeadAttention
 from multi_head_smoothed_cosine_attention import MultiHeadSmoothedCosineAttention
 from cached_multi_head_manhattan_attention import CahedMultiHeadManhattanAttention
-from multi_head_tanh_attention import MultiHeadTanhAttention
+from multi_head_tanh_attention import CachedTahnMultiHeadAttention
 from multi_head_sigmoid_attention import MultiHeadSigmoidAttention
 from multi_head_sigmoidL1_attention import MultiHeadSigmoidL1Attention
 from multi_head_sigmoid_noSM_attention import MultiHeadSigmoidNoSMAttention
@@ -46,7 +46,7 @@ attentions = {
             "Euclidean":CachedEuclideanMultiHeadAttention,
             "SmoothedCosine":MultiHeadSmoothedCosineAttention,
             "Manhattan":CahedMultiHeadManhattanAttention,
-            "Tanh":MultiHeadTanhAttention,
+            "Tanh":CachedTahnMultiHeadAttention,
             "Sigmoid":MultiHeadSigmoidAttention,
             "SigmoidL1":MultiHeadSigmoidL1Attention,
             "SigmoidNoSM":MultiHeadSigmoidNoSMAttention,
