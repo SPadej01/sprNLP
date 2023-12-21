@@ -45,9 +45,9 @@ class MultiHeadSmoothedCosineAttention(MultiHeadAttention):
         """
 
 
-        query = ops.multiply(
-            query, ops.cast(self._inverse_sqrt_key_dim, query.dtype)
-        )
+        # query = ops.multiply(
+        #     query, ops.cast(self._inverse_sqrt_key_dim, query.dtype)
+        # )
 
         # Calculates Smoothed Cosine Similarity between "query" i "key"
         query_norm = ops.sqrt(ops.sum(ops.square(query), axis=-1, keepdims=True))
