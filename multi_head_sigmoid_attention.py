@@ -43,9 +43,11 @@ class MultiHeadSigmoidAttention(MultiHeadAttention):
             query, ops.cast(self._inverse_sqrt_key_dim, query.dtype)
         )
 
-        # We add the sigmoid transformation to the calculation of the similarity function
-        attention_scores = tf.math.sigmoid(ops.einsum(self._dot_product_equation, key, query))
-       
+        dot_product = ops.einsum(self._dot_product_equation, key, query)
+
+        # Apply sigmoid function to dot product
+        attention_scores = ops.sigmoid(dot_product)
+               
 
         attention_scores = self._masked_softmax(
             attention_scores, attention_mask
