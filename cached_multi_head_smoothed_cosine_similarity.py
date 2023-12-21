@@ -11,7 +11,9 @@ as similarity measure to  calculate attention scores.
 """
 
 
-class MultiHeadSmoothedCosineAttention(MultiHeadAttention):
+
+
+class CachedMultiHeadSmoothedCosineAttention(MultiHeadAttention):
   def __init__(
         self,
          **kwargs,
@@ -45,11 +47,11 @@ class MultiHeadSmoothedCosineAttention(MultiHeadAttention):
         """
 
 
-        query = ops.multiply(
-            query, ops.cast(self._inverse_sqrt_key_dim, query.dtype)
-        )
+        # query = ops.multiply(
+        #     query, ops.cast(self._inverse_sqrt_key_dim, query.dtype)
+        # )
 
-        # Calculates Smoothed Cosine Similarity between "query" i "key"
+             # calculate L2 norm using ops functions 
         query_norm = ops.sqrt(ops.sum(ops.square(query), axis=-1, keepdims=True))
         key_norm = ops.sqrt(ops.sum(ops.square(key), axis=-1, keepdims=True))
         normalized_query = query / query_norm
@@ -59,7 +61,7 @@ class MultiHeadSmoothedCosineAttention(MultiHeadAttention):
         # calculate smoothed cosine similarity
         epsilon=epsilon=1e-6
         attention_scores= (1 - cosine_similarity) / 2 + epsilon
-        
+
         attention_scores = self._masked_softmax(
             attention_scores, attention_mask
         )
