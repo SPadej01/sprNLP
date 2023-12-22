@@ -8,7 +8,7 @@ import numpy as np
 """
 Override the MultiHeadAttention class with use of sigmoid to calculate attention scores. 
 """
-class MultiHeadSigmoidNoSMAttention(MultiHeadAttention):
+class MultiHeadDotSigmoidAttention(MultiHeadAttention):
   def __init__(
         self,
          **kwargs,
@@ -43,16 +43,15 @@ class MultiHeadSigmoidNoSMAttention(MultiHeadAttention):
             query, ops.cast(self._inverse_sqrt_key_dim, query.dtype)
         )
 
-        # We add the sigmoid transformation to the calculation of the similarity function
-        attention_scores = tf.math.sigmoid(ops.einsum(self._dot_product_equation, key, query))
-       
+        dot_product = ops.einsum(self._dot_product_equation, key, query)
 
-        # attention_scores = self._masked_softmax(
-        #     attention_scores, attention_mask
-        # )
-        # Simple multiplication instead of softmax
-        if attention_mask is not None:
-            attention_scores *= tf.expand_dims(attention_mask, axis=-1)
+        # Apply sigmoid function to dot product
+        attention_scores = ops.sigmoid(dot_product)
+               
+
+        attention_scores = self._masked_softmax(
+            attention_scores, attention_mask
+        )
 
         attention_scores_dropout = self._dropout_layer(
             attention_scores, training=training

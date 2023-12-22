@@ -10,7 +10,7 @@ Override the MultiHeadAttention class using Euclidean distance
 as similarity measure to  calculate attention scores.
 """
 
-class CahedMultiHeadSigmoidAttention(MultiHeadAttention):
+class CahedMultiHeadDotSigmoidAttention(MultiHeadAttention):
     """MultiHeadAttention layer with cache support.
 
     This layer is suitable for use in autoregressive decoding. It can be used

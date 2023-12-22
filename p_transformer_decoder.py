@@ -17,10 +17,8 @@ from cached_multi_head_euclidean_attention import CachedEuclideanMultiHeadAttent
 from cached_multi_head_smoothed_cosine_attention import CachedMultiHeadSmoothedCosineAttention
 from cached_multi_head_manhattan_attention import CahedMultiHeadManhattanAttention
 from cached_multi_head_tahn_attention import CachedTahnMultiHeadAttention
-from cached_multi_head_sigmoid_attention import CahedMultiHeadSigmoidAttention
-from multi_head_sigmoidL1_attention import MultiHeadSigmoidL1Attention
-from multi_head_sigmoid_noSM_attention import MultiHeadSigmoidNoSMAttention
-from multi_head_sigmoid_sigmoid_noSM_attention import MultiHeadSigmoidSigmoidNoSMAttention
+from cached_multi_head_dotsigmoid_attention import CahedMultiHeadDotSigmoidAttention
+from cached_multi_head_argsigmoid_dotsigmoid_attention import CahedMultiHeadArgSigmoidDotSigmoidAttention
 
 
 from keras_nlp.layers import TransformerDecoder
@@ -47,12 +45,8 @@ attentions = {
             "SmoothedCosine":CachedMultiHeadSmoothedCosineAttention,
             "Manhattan":CahedMultiHeadManhattanAttention,
             "Tanh":CachedTahnMultiHeadAttention,
-            "Sigmoid":CahedMultiHeadSigmoidAttention,
-            "SigmoidL1":MultiHeadSigmoidL1Attention,
-            "SigmoidNoSM":MultiHeadSigmoidNoSMAttention,
-            "SigmoidSigmoidNoSM":MultiHeadSigmoidSigmoidNoSMAttention,
-            
-
+            "DotSigmoid":CachedMultiHeadDotSigmoidAttention,
+            "ArgSigmoidDotSigmoid":CachedMultiHeadArgSigmoidDotSigmoidAttention,
             }
 
 

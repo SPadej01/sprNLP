@@ -4,10 +4,9 @@ from multi_head_euclidean_attention import MultiHeadEuclideanAttention
 from multi_head_smoothed_cosine_attention import MultiHeadSmoothedCosineAttention
 from multi_head_manhattan_attention import MultiHeadManhattanAttention
 from multi_head_tanh_attention import MultiHeadTanhAttention
-from multi_head_sigmoid_attention import MultiHeadSigmoidAttention
-from multi_head_sigmoidL1_attention import MultiHeadSigmoidL1Attention
-from multi_head_sigmoid_noSM_attention import MultiHeadSigmoidNoSMAttention
-from multi_head_sigmoid_sigmoid_noSM_attention import MultiHeadSigmoidSigmoidNoSMAttention
+from multi_head_dotsigmoid_attention import MultiHeadDotSigmoidAttention
+from multi_head_argsigmoid_dotsigmoid_attention import MultiHeadDotSigmoidAttention
+
 
 
 from keras_nlp.src.utils.keras_utils import clone_initializer
@@ -22,12 +21,8 @@ attentions = {"DOT":keras.layers.MultiHeadAttention,
             "SmoothedCosine":MultiHeadSmoothedCosineAttention,
             "Manhattan":MultiHeadManhattanAttention,
             "Tanh":MultiHeadTanhAttention,
-            "Sigmoid":MultiHeadSigmoidAttention,
-            "SigmoidL1":MultiHeadSigmoidL1Attention,
-            "SigmoidNoSM":MultiHeadSigmoidNoSMAttention,
-            "SigmoidSigmoidNoSM":MultiHeadSigmoidSigmoidNoSMAttention,
-            
-
+            "DotSigmoid":MultiHeadDotSigmoidAttention,
+            "ArgSigmoidDotSigmoid":MultiHeadArgSigmoidDotSigmoidAttention,
             }
 
 
