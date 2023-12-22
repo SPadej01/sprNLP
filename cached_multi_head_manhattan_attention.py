@@ -2,16 +2,18 @@
 #Trzeba być zgodnym z Keras 3.0....
 from keras_core.src.layers import MultiHeadAttention
 from keras_core import ops, backend
-import tensorflow as tf
-import numpy as np
+
 
 """
-Override the MultiHeadAttention class using Euclidean distance
+Override the MultiHeadAttention class using Manhattan distance
 as similarity measure to  calculate attention scores.
 """
 
 class CahedMultiHeadManhattanAttention(MultiHeadAttention):
-    """MultiHeadAttention layer with cache support.
+    """
+    Applies Manhattan Distance Similarity attention with query, key, value tensors.
+
+    MultiHeadAttention layer with cache support.
 
     This layer is suitable for use in autoregressive decoding. It can be used
     to cache decoder self-attention and cross-attention. The forward pass
@@ -121,13 +123,15 @@ class CahedMultiHeadManhattanAttention(MultiHeadAttention):
             1.0 / ops.sqrt(ops.cast(self._key_dim, query.dtype)),
         )
         
-        # Konieczne poszerzenie wymiarów do obliczeń
+      # Compute the Manhattan distance between query and key tensors.
+      # Key and query dimensions must be expanded for calculs
         query_expanded = ops.expand_dims(query, axis=2)  
         key_expanded = ops.expand_dims(key, axis=1) 
 
-        # Obliczamy odległość Manhattan między tensorem query i key
+        # Calculate Manhattan distance between query and key
         manhattan_distance = ops.sum(ops.abs(query_expanded - key_expanded), axis=-1)  # Wynik: (B, T, S*)
-        manhattan_distance = ops.transpose(manhattan_distance,(0, 3,1,2))  # transpozycja by uzyskać zgodność wymiarów z maską
+        manhattan_distance = ops.transpose(manhattan_distance,(0, 3,1,2))  # Transpose to acquire dimensions the same as attention_mask
+
         
         # dot_product = ops.einsum(self._dot_product_equation, key, query)
         

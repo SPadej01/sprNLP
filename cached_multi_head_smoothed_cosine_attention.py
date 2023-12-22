@@ -14,7 +14,7 @@ as similarity measure to  calculate attention scores.
 
 
 class CachedMultiHeadSmoothedCosineAttention(MultiHeadAttention):
-    """MultiHeadAttention layer with cache support.
+    """Applies Smoothed Cosine Similarity attention with query, key, value tensors.
 
     This layer is suitable for use in autoregressive decoding. It can be used
     to cache decoder self-attention and cross-attention. The forward pass

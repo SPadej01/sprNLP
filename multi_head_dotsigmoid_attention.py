@@ -2,8 +2,6 @@
 #Trzeba być zgodnym z Keras 3.0....
 from keras_core.src.layers import MultiHeadAttention
 from keras_core import ops
-import tensorflow as tf
-import numpy as np
 
 """
 Override the MultiHeadAttention class with use of sigmoid to calculate attention scores. 
@@ -20,7 +18,7 @@ class MultiHeadDotSigmoidAttention(MultiHeadAttention):
     def _compute_attention(
         self, query, key, value, attention_mask=None, training=None
     ):
-        """Applies Sigmoid similarity attention between query, key, value tensors.
+        """Applies Sigmoid to dot product tensors.
 
             Args:
                 query: Projected query tensor of shape `(B, T, N, key_dim)`.

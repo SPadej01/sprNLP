@@ -2,8 +2,7 @@
 #Trzeba być zgodnym z Keras 3.0....
 from keras_core.src.layers import MultiHeadAttention
 from keras_core import ops
-# import tensorflow as tf
-import numpy as np
+
 
 """
 Override the MultiHeadAttention class with use of hyperbolic tangens to calculate attention scores. 

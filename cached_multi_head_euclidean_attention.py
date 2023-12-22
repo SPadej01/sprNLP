@@ -1,5 +1,4 @@
-import tensorflow as tf
-import numpy as np
+
 from keras_nlp.src.backend import ops
 from keras_core.src.layers import MultiHeadAttention
 
@@ -7,8 +6,17 @@ from keras_core.src.layers import MultiHeadAttention
 #     CachedMultiHeadAttention,
 # )
 
+
+"""
+Override the MultiHeadAttention class using Euclidean distance
+as similarity measure to  calculate attention scores.
+"""
+
 class CachedEuclideanMultiHeadAttention(MultiHeadAttention):
-    """MultiHeadAttention layer with cache support.
+    """
+    Applies Euclidean Distance Similarity attention with query, key, value tensors.
+    
+    MultiHeadAttention layer with cache support.
 
     This layer is suitable for use in autoregressive decoding. It can be used
     to cache decoder self-attention and cross-attention. The forward pass
@@ -122,21 +130,20 @@ class CachedEuclideanMultiHeadAttention(MultiHeadAttention):
         query_expanded = ops.expand_dims(query, axis=2)  
         key_expanded = ops.expand_dims(key, axis=1) 
 
-        # Obliczamy kwadrat różnicy między tensorem query i key
-        squared_diff = ops.square(query_expanded - key_expanded)  # Wynik: (B, T, S*, dim)
+         # square of the difference between the query and key tensors
+        squared_diff = ops.square(query_expanded - key_expanded)  # Result: (B, T, S*, dim)
 
-        # Sumujemy kwadraty różnic wzdłuż ostatniego wymiaru (dim)
-        sum_squared_diff = ops.sum(squared_diff, axis=-1)  # Wynik: (B, T, S*)
+         #  sum the squares of differences along the last dimension (dim)
+        sum_squared_diff = ops.sum(squared_diff, axis=-1)  # Result: (B, T, S*)
 
-        # Obliczamy pierwiastek kwadratowy z sumy kwadratów różnic
-        euclidean_distance = ops.sqrt(sum_squared_diff)  # Wynik: (B, T, S*)
+        # the square root of the sum of the squares of the differences
+        euclidean_distance = ops.sqrt(sum_squared_diff)  # Result: (B, T, S*)
 
-        # Transponujemy wynik, aby uzyskać wymiary (B, S*, T, T)
-        euclidean_distance = ops.transpose(euclidean_distance, (0, 3,1,2))  # Wynik: (B, 8, 40, 40)
+        # Transpose results to acquire dimension (B, S*, T, T)
+        euclidean_distance = ops.transpose(euclidean_distance, (0, 3,1,2))  # Result: (B, 8, 40, 40)
         
                 
         # dot_product = ops.einsum(self._dot_product_equation, key, query)
-
         attention_scores= euclidean_distance
 
 

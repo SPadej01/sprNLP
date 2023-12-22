@@ -2,16 +2,17 @@
 #Trzeba być zgodnym z Keras 3.0....
 from keras_core.src.layers import MultiHeadAttention
 from keras_core import ops, backend
-#import tensorflow as tf
-import numpy as np
+
 
 """
-Override the MultiHeadAttention class using Euclidean distance
-as similarity measure to  calculate attention scores.
+Override the MultiHeadAttention class with use of sigmoid to calculate attention scores. 
 """
 
 class CahedMultiHeadDotSigmoidAttention(MultiHeadAttention):
-    """MultiHeadAttention layer with cache support.
+    """
+    Applies Sigmoid to dot product tensors.
+    
+    MultiHeadAttention layer with cache support.
 
     This layer is suitable for use in autoregressive decoding. It can be used
     to cache decoder self-attention and cross-attention. The forward pass
@@ -127,18 +128,6 @@ class CahedMultiHeadDotSigmoidAttention(MultiHeadAttention):
 
         # Apply sigmoid function to dot product
         attention_scores = ops.sigmoid(dot_product)
-        # if manhattan_distance is not None:
-        #   print(f'Shape of manhattan_distance:{manhattan_distance.shape}')
-        # if self._dot_product_equation is not None:
-        #   print(f'self._dot_product_equation: {self._dot_product_equation}')
-        # if attention_scores is not None:
-        #   print(f'Shape of dot product:{attention_scores.shape}')
-        # if key is not None:
-        #   print(f'Shape of key:{key.shape}')
-        # if query is not None:
-        #   print(f'Shape of query:{query.shape}')
-        # if attention_mask is not None:
-        #   print(f'Shape of attention_mask:{attention_mask.shape}')
         
         attention_scores = self._masked_softmax(
             attention_scores, attention_mask

@@ -2,8 +2,7 @@
 #Trzeba być zgodnym z Keras 3.0....
 from keras_core.src.layers import MultiHeadAttention
 from keras_core import ops
-import tensorflow as tf
-import numpy as np
+
 
 
 """
@@ -47,9 +46,9 @@ def _compute_attention(
     query_expanded = ops.expand_dims(query, axis=2)  
     key_expanded = ops.expand_dims(key, axis=1) 
 
-    # Obliczamy odległość Manhattan między tensorem query i key
-    manhattan_distance = ops.sum(ops.abs(query_expanded - key_expanded), axis=-1)  # Wynik: (B, T, S*)
-    manhattan_distance = ops.transpose(manhattan_distance,(0, 3,1,2))  # transpozycja by uzyskać zgodność wymiarów z maską
+    # Calculate Manhattan distance between query and key
+    manhattan_distance = ops.sum(ops.abs(query_expanded - key_expanded), axis=-1)  # Result: (B, T, S*)
+    manhattan_distance = ops.transpose(manhattan_distance,(0, 3,1,2))  # Transpose to acquire dimensions the same as attention_mask
     
     # dot_product = ops.einsum(self._dot_product_equation, key, query)
     

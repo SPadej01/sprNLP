@@ -1,5 +1,4 @@
-import tensorflow as tf
-import numpy as np
+
 from keras_nlp.src.backend import ops
 from keras_core.src.layers import MultiHeadAttention
 
@@ -7,8 +6,12 @@ from keras_core.src.layers import MultiHeadAttention
 #     CachedMultiHeadAttention,
 # )
 
+"""
+Override the MultiHeadAttention class with use of hyperbolic tangens to calculate attention scores. 
+"""
+
 class CachedTahnMultiHeadAttention(MultiHeadAttention):
-    """MultiHeadAttention layer with cache support.
+    """Applies Hyperbolic Tangens similarity attention between query, key, value tensors.
 
     This layer is suitable for use in autoregressive decoding. It can be used
     to cache decoder self-attention and cross-attention. The forward pass
