@@ -1,14 +1,27 @@
-import tensorflow as tf
-import numpy as np
+#import tensorflow as tf
+#import numpy as np
 from keras_nlp.src.backend import ops
 from keras_core.src.layers import MultiHeadAttention
 
-# from keras_nlp.src.layers.modeling.cached_multi_head_attention import (
-#     CachedMultiHeadAttention,
-# )
+"""
+Overriding the MultiHeadAttention class by applying cosine similarity
+Cosine similarity is a measure of the similarity between two vectors that calculates the cosine of the angle between them.
+The cosine similarity value ranges from -1 (completely different) to 1 (identical).
+
+In the case of cosine similarity, the calculations are as follows:
+
+1. Calculate the cosine similarity between query and key vectors.
+2. Optionally, scale the cosine similarity results (e.g. by multiplying by a constant value).
+3. Apply the softmax function to normalize the cosine similarity results.
+4. Calculate self-attention values ​​by multiplying the normalized weights by the value vectors.
+
+"""
 
 class CachedCosineMultiHeadAttention(MultiHeadAttention):
-    """MultiHeadAttention layer with cache support.
+    """
+    Applies Cosine Similarity attention with query, key, value tensors.
+
+    MultiHeadAttention layer with cache support.
 
     This layer is suitable for use in autoregressive decoding. It can be used
     to cache decoder self-attention and cross-attention. The forward pass

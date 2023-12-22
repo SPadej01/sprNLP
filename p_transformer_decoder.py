@@ -45,8 +45,8 @@ attentions = {
             "SmoothedCosine":CachedMultiHeadSmoothedCosineAttention,
             "Manhattan":CahedMultiHeadManhattanAttention,
             "Tanh":CachedTahnMultiHeadAttention,
-            "DotSigmoid":CachedMultiHeadDotSigmoidAttention,
-            "ArgSigmoidDotSigmoid":CachedMultiHeadArgSigmoidDotSigmoidAttention,
+            "DotSigmoid":CahedMultiHeadDotSigmoidAttention,
+            "ArgSigmoidDotSigmoid":CahedMultiHeadArgSigmoidDotSigmoidAttention,
             }
 
 

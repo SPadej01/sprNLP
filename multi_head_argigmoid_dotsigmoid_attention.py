@@ -2,12 +2,11 @@
 #Trzeba być zgodnym z Keras 3.0....
 from keras_core.src.layers import MultiHeadAttention
 from keras_core import ops
-#import tensorflow as tf
-#import numpy as np
+import tensorflow as tf
+import numpy as np
 
 """
 Override the MultiHeadAttention class with use of sigmoid to calculate attention scores. 
-In this implementation sigmoid function is applied to: keys, query and result of dot product.
 """
 class MultiHeadArgSigmoidDotSigmoidAttention(MultiHeadAttention):
   def __init__(
@@ -21,7 +20,7 @@ class MultiHeadArgSigmoidDotSigmoidAttention(MultiHeadAttention):
     def _compute_attention(
         self, query, key, value, attention_mask=None, training=None
     ):
-        """Applies Sigmoid similarity attention between query, key, and dot product value tensors.
+        """Applies Sigmoid similarity attention between query, key, value tensors.
 
             Args:
                 query: Projected query tensor of shape `(B, T, N, key_dim)`.
@@ -45,19 +44,21 @@ class MultiHeadArgSigmoidDotSigmoidAttention(MultiHeadAttention):
         )
 
         # apply sigmoid on key and query
+
         key = ops.sigmoid(key)
         values = ops.sigmoid(values)
-        # perform regular dot product
+
+
         attention_scores = ops.einsum(self._dot_product_equation, key, query)
-        # Add sigmoid transformation to result of dot product
+       # We add the sigmoid transformation to the calculation of the similarity function
         attention_scores = ops.sigmoid(attention_scores) 
 
-        attention_scores = self._masked_softmax(
-            attention_scores, attention_mask
-        )
+        # attention_scores = self._masked_softmax(
+        #     attention_scores, attention_mask
+        # )
         # Simple multiplication instead of softmax
-        # if attention_mask is not None:
-        #     attention_scores *= tf.expand_dims(attention_mask, axis=-1)
+        if attention_mask is not None:
+            attention_scores *= tf.expand_dims(attention_mask, axis=-1)
 
         attention_scores_dropout = self._dropout_layer(
             attention_scores, training=training

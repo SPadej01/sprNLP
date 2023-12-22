@@ -2,8 +2,8 @@
 #Trzeba być zgodnym z Keras 3.0....
 from keras_core.src.layers import MultiHeadAttention
 from keras_core import ops
-import tensorflow as tf
-import numpy as np
+#import tensorflow as tf
+#import numpy as np
 
 """
 Overriding the MultiHeadAttention class by applying cosine similarity
@@ -46,16 +46,20 @@ class MultiHeadCosineAttention(MultiHeadAttention):
           attention_output: Multi-headed outputs of attention computation.
           attention_scores: Multi-headed attention weights.
         """
+        # Remove scalling query because the query, key vectors are scalled using L2 norm
 
         # Queries and keys normalization
         # query = query / np.linalg.norm(query, axis=-1, keepdims=True)
         # key = key / np.linalg.norm(key, axis=-1, keepdims=True)
 
-        query = tf.math.l2_normalize(query, axis=-1)
-        key = tf.math.l2_normalize(key, axis=-1)
+      # calculate L2 norm using ops functions 
+        query_norm = ops.sqrt(ops.sum(ops.square(query), axis=-1, keepdims=True))
+        key_norm = ops.sqrt(ops.sum(ops.square(key), axis=-1, keepdims=True))
+        normalized_query = query / query_norm
+        normalized_key = key / key_norm
 
         # Calculate cosine similairy between keys and queries
-        attention_scores = ops.einsum(self._dot_product_equation, key, query)
+        attention_scores = ops.einsum(self._dot_product_equation, normalized_key, normalized_query)
 
         attention_scores = self._masked_softmax(
             attention_scores, attention_mask

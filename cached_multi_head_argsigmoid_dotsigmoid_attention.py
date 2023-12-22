@@ -3,15 +3,18 @@
 from keras_core.src.layers import MultiHeadAttention
 from keras_core import ops, backend
 #import tensorflow as tf
-import numpy as np
+#import numpy as np
 
 """
-Override the MultiHeadAttention class using Euclidean distance
-as similarity measure to  calculate attention scores.
+Override the MultiHeadAttention class with use of sigmoid to calculate attention scores. 
+In this implementation sigmoid function is applied to: keys, query and result of dot product.
 """
 
 class CahedMultiHeadArgSigmoidDotSigmoidAttention(MultiHeadAttention):
-    """MultiHeadAttention layer with cache support.
+    """
+    Applies Sigmoid similarity attention between query, key, and dot product value tensors.
+
+    MultiHeadAttention layer with cache support.
 
     This layer is suitable for use in autoregressive decoding. It can be used
     to cache decoder self-attention and cross-attention. The forward pass
@@ -122,28 +125,19 @@ class CahedMultiHeadArgSigmoidDotSigmoidAttention(MultiHeadAttention):
             1.0 / ops.sqrt(ops.cast(self._key_dim, query.dtype)),
         )
         
-        # Apply sigmoid to key and query
+        # apply sigmoid on key and query
 
         key= ops.sigmoid(key)
         query = ops.sigmoid(query)
-        
+        # perform regular dot product
         dot_product = ops.einsum(self._dot_product_equation, key, query)
 
         # Apply sigmoid function to dot product
         attention_scores = ops.sigmoid(dot_product)
-        # if manhattan_distance is not None:
-        #   print(f'Shape of manhattan_distance:{manhattan_distance.shape}')
-        # if self._dot_product_equation is not None:
-        #   print(f'self._dot_product_equation: {self._dot_product_equation}')
-        # if attention_scores is not None:
-        #   print(f'Shape of dot product:{attention_scores.shape}')
-        # if key is not None:
-        #   print(f'Shape of key:{key.shape}')
-        # if query is not None:
-        #   print(f'Shape of query:{query.shape}')
-        # if attention_mask is not None:
-        #   print(f'Shape of attention_mask:{attention_mask.shape}')
         
+        # Simple multiplication instead of softmax
+        # if attention_mask is not None:
+        #     attention_scores *= tf.expand_dims(attention_mask, axis=-1)
         attention_scores = self._masked_softmax(
             attention_scores, attention_mask
         )
